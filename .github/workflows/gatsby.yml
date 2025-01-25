@@ -25,12 +25,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          # Removed cache configuration to avoid lock file dependency
-          cache: "none"
+          node-version: "20" # Use the version required for your project
 
       - name: Setup Pages
         id: pages
