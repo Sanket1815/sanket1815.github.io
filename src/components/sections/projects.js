@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useStaticQuery, graphql } from 'gatsby';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { Icon } from '@components/icons';
@@ -40,6 +42,23 @@ const StyledProjectsSection = styled.section`
   .more-button {
     ${({ theme }) => theme.mixins.button};
     margin: 80px auto 0;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
   }
 `;
 
@@ -53,6 +72,12 @@ const StyledProject = styled.li`
     &:focus-within {
       .project-inner {
         transform: translateY(-7px);
+        box-shadow: 0 25px 50px -15px var(--navy-shadow);
+      }
+      
+      .project-links a {
+        color: var(--green);
+        transform: translateY(-2px);
       }
     }
   }
@@ -74,6 +99,11 @@ const StyledProject = styled.li`
     background-color: var(--light-navy);
     transition: var(--transition);
     overflow: auto;
+    border: 1px solid transparent;
+    
+    &:hover {
+      border-color: var(--green);
+    }
   }
 
   .project-top {
@@ -85,6 +115,11 @@ const StyledProject = styled.li`
       svg {
         width: 40px;
         height: 40px;
+        transition: all 0.3s ease;
+      }
+      
+      &:hover svg {
+        transform: scale(1.1) rotate(5deg);
       }
     }
 
@@ -97,7 +132,13 @@ const StyledProject = styled.li`
       a {
         ${({ theme }) => theme.mixins.flexCenter};
         padding: 5px 7px;
+        transition: all 0.3s ease;
+        border-radius: 4px;
 
+        &:hover {
+          background-color: var(--lightest-navy);
+          transform: translateY(-2px);
+        }
         &.external {
           svg {
             width: 22px;
@@ -118,9 +159,14 @@ const StyledProject = styled.li`
     margin: 0 0 10px;
     color: var(--lightest-slate);
     font-size: var(--fz-xxl);
+    transition: color 0.3s ease;
 
     a {
       position: static;
+      
+      &:hover {
+        color: var(--green);
+      }
 
       &:before {
         content: '';
@@ -157,9 +203,20 @@ const StyledProject = styled.li`
       font-family: var(--font-mono);
       font-size: var(--fz-xxs);
       line-height: 1.75;
+      padding: 2px 6px;
+      background-color: var(--lightest-navy);
+      border-radius: 3px;
+      transition: all 0.3s ease;
 
       &:not(:last-of-type) {
         margin-right: 15px;
+        margin-bottom: 5px;
+      }
+      
+      &:hover {
+        background-color: var(--green);
+        color: var(--navy);
+        transform: translateY(-1px);
       }
     }
   }
@@ -195,6 +252,10 @@ const Projects = () => {
   const revealArchiveLink = useRef(null);
   const revealProjects = useRef([]);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true
+  });
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -224,25 +285,35 @@ const Projects = () => {
             </div>
             <div className="project-links">
               {github && (
-                <a href={github} aria-label="GitHub Link" target="_blank" rel="noreferrer">
+                <motion.a 
+                  href={github} 
+                  aria-label="GitHub Link" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
                   <Icon name="GitHub" />
-                </a>
+                </motion.a>
               )}
               {external && (
-                <a
+                <motion.a
                   href={external}
                   aria-label="External Link"
                   className="external"
                   target="_blank"
-                  rel="noreferrer">
+                  rel="noreferrer"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
                   <Icon name="External" />
-                </a>
+                </motion.a>
               )}
             </div>
           </div>
 
           <h3 className="project-title">
-            <a href={external} target="_blank" rel="noreferrer">
+            <a href={external || github} target="_blank" rel="noreferrer">
               {title}
             </a>
           </h3>
@@ -264,12 +335,25 @@ const Projects = () => {
   };
 
   return (
-    <StyledProjectsSection>
-      <h2 ref={revealTitle}>Projects | Case Comps | Certifications</h2>
+    <StyledProjectsSection ref={ref}>
+      <motion.h2 
+        ref={revealTitle}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+      >
+        Featured Projects
+      </motion.h2>
 
-      <Link className="inline-link archive-link" to="/archive" ref={revealArchiveLink}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <Link className="inline-link archive-link" to="/archive" ref={revealArchiveLink}>
         View Archive
-      </Link>
+        </Link>
+      </motion.div>
 
       <ul className="projects-grid">
         {prefersReducedMotion ? (
@@ -283,28 +367,35 @@ const Projects = () => {
           <TransitionGroup component={null}>
             {projectsToShow &&
               projectsToShow.map(({ node }, i) => (
-                <CSSTransition
+                <motion.div
                   key={i}
-                  classNames="fadeup"
-                  timeout={i >= GRID_LIMIT ? (i - GRID_LIMIT) * 300 : 300}
-                  exit={false}>
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: i >= GRID_LIMIT ? (i - GRID_LIMIT) * 0.1 : i * 0.1 
+                  }}
+                >
                   <StyledProject
                     key={i}
                     ref={el => (revealProjects.current[i] = el)}
-                    style={{
-                      transitionDelay: `${i >= GRID_LIMIT ? (i - GRID_LIMIT) * 100 : 0}ms`,
-                    }}>
+                  >
                     {projectInner(node)}
                   </StyledProject>
-                </CSSTransition>
+                </motion.div>
               ))}
           </TransitionGroup>
         )}
       </ul>
 
-      <button className="more-button" onClick={() => setShowMore(!showMore)}>
+      <motion.button 
+        className="more-button" 
+        onClick={() => setShowMore(!showMore)}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
         Show {showMore ? 'Less' : 'More'}
-      </button>
+      </motion.button>
     </StyledProjectsSection>
   );
 };

@@ -1,19 +1,11 @@
 module.exports = {
-  email: 'nadkarnisanket15@gmail.com',
+  email: 'snadkarn@odu.edu',
 
   socialMedia: [
     {
       name: 'GitHub',
       url: 'https://github.com/Sanket1815',
     },
-    // {
-    //   name: 'Instagram',
-    //   url: 'https://www.instagram.com/chandrikadeb7',
-    // },
-    // {
-    //   name: 'Twitter',
-    //   url: 'https://twitter.com/chandrikadeb7',
-    // },
     {
       name: 'Linkedin',
       url: 'https://www.linkedin.com/in/sanket-nadkarni-ba1bb9151',
@@ -26,8 +18,16 @@ module.exports = {
       url: '/#about',
     },
     {
+      name: 'Education',
+      url: '/#education',
+    },
+    {
       name: 'Experience',
       url: '/#jobs',
+    },
+    {
+      name: 'Skills',
+      url: '/#skills',
     },
     {
       name: 'Work',

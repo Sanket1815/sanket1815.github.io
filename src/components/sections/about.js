@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
@@ -34,6 +36,8 @@ const StyledText = styled.div`
       padding-left: 20px;
       font-family: var(--font-mono);
       font-size: var(--fz-xs);
+      transition: all 0.3s ease;
+      cursor: pointer;
 
       &:before {
         content: '▹';
@@ -42,8 +46,23 @@ const StyledText = styled.div`
         color: var(--green);
         font-size: var(--fz-sm);
         line-height: 12px;
+        transition: all 0.3s ease;
+      }
+      
+      &:hover {
+        color: var(--green);
+        transform: translateX(5px);
+        
+        &:before {
+          color: var(--white);
+        }
       }
     }
+  }
+  
+  .highlight {
+    color: var(--green);
+    font-weight: 600;
   }
 `;
 const StyledPic = styled.div`
@@ -62,11 +81,13 @@ const StyledPic = styled.div`
     width: 100%;
     border-radius: var(--border-radius);
     background-color: var(--green);
+    transition: all 0.3s ease;
 
     &:hover,
     &:focus {
       outline: 0;
       transform: translate(-4px, -4px);
+      box-shadow: 0 25px 50px -15px var(--navy-shadow);
 
       &:after {
         transform: translate(8px, 8px);
@@ -116,6 +137,10 @@ const StyledPic = styled.div`
 const About = () => {
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true
+  });
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -125,54 +150,62 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['Sofware Developer', 'Data Analysis', 'Full Stack Development'];
+  const skills = [
+    'Full Stack Development',
+    'Cloud Architecture (Azure)',
+    'GraphQL & REST APIs',
+    'React.js & Node.js',
+    'Machine Learning',
+    'Database Design',
+    'DevOps & CI/CD',
+    'System Architecture'
+  ];
 
   return (
-    <StyledAboutSection id="about" ref={revealContainer}>
+    <StyledAboutSection id="about" ref={ref}>
       <h2 className="numbered-heading">About Me</h2>
 
       <div className="inner">
-        <StyledText>
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <StyledText>
           <div>
             <p>
-              With over 3 years of experience in full-stack development, I have honed my skills in
-              building robust web applications. My journey began at Savitribai Phule Pune
-              University, where I completed my Bachelor's degree in Computer Engineering. This
-              academic foundation paved the way for my professional endeavors, including a
-              significant role at Proxima Systems, where I led the design and development of
-              educational portals. My work involved creating and optimizing GraphQL APIs, enhancing
-              user experience, and integrating advanced technologies such as Node.js and React.js.
+              Hello! I'm Sanket, a passionate software engineer with <span className="highlight">3+ years</span> of 
+              experience in full-stack development. My journey began at <span className="highlight">Savitribai Phule Pune University</span>, 
+              where I earned my Bachelor's in Computer Engineering, laying the foundation for my career in technology.
             </p>
 
             <p>
-              At Proxima Systems, I took on the challenge of developing high-performance web
-              applications that required meticulous attention to detail and a deep understanding of
-              modern development frameworks. I successfully led projects that involved creating over
-              50+ GraphQL APIs using MolecularJS, a progressive microservices framework for Node.js.
-              This experience not only improved my technical skills but also enhanced my ability to
-              work collaboratively with frontend teams to optimize React.js components, ensuring
-              seamless integration and high performance across various platforms.
+              At <span className="highlight">Proxima Systems</span>, I led the development of educational portals and 
+              created <span className="highlight">50+ GraphQL APIs</span> using MolecularJS. I collaborated with frontend teams 
+              to optimize React.js components and integrated Azure DevOps for improved deployment processes.
             </p>
 
             <p>
-              Currently pursuing a Master’s in Computer Science at Old Dominion University, I am
-              focused on advancing my knowledge in data science and algorithms. My passion for
-              technology drives me to stay updated with the latest advancements and continuously
-              seek opportunities to apply innovative solutions to real-world problems. From
-              developing an NLP chatbot with Python and TensorFlow to creating a Plant Disease
-              Detection system using deep learning techniques, I strive to leverage my skills to
-              make meaningful contributions to the field of software development.
+              Currently pursuing my <span className="highlight">Master's in Computer Science</span> at Old Dominion University, 
+              I'm expanding my expertise in advanced algorithms and system design. I'm passionate about creating 
+              innovative solutions that make a real impact.
             </p>
 
-            <p>My skills are not limited to this list!</p>
+            <p>Here are some technologies I've been working with recently:</p>
           </div>
 
           <ul className="skills-list">
             {skills && skills.map((skill, i) => <li key={i}>{skill}</li>)}
           </ul>
-        </StyledText>
+          </StyledText>
+        </motion.div>
 
-        <StyledPic>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <StyledPic>
           <div className="wrapper">
             <StaticImage
               className="img"
@@ -183,7 +216,8 @@ const About = () => {
               alt="Headshot"
             />
           </div>
-        </StyledPic>
+          </StyledPic>
+        </motion.div>
       </div>
     </StyledAboutSection>
   );

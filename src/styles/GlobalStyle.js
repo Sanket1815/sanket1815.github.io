@@ -258,6 +258,7 @@ const GlobalStyle = createGlobalStyle`
     color: inherit;
     position: relative;
     transition: var(--transition);
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -273,6 +274,11 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
     border: 0;
     border-radius: 0;
+    transition: var(--transition);
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
   }
 
   input, textarea {
@@ -311,6 +317,34 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--navy);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--green);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--light-slate);
+  }
+
+  /* Selection styles */
+  ::selection {
+    background-color: var(--green);
+    color: var(--navy);
+  }
+
+  ::-moz-selection {
+    background-color: var(--green);
+    color: var(--navy);
+  }
   ul {
     &.fancy-list {
       padding: 0;
@@ -321,11 +355,19 @@ const GlobalStyle = createGlobalStyle`
         position: relative;
         padding-left: 30px;
         margin-bottom: 10px;
+        transition: all 0.3s ease;
+        
         &:before {
           content: '▹';
           position: absolute;
           left: 0;
           color: var(--green);
+          transition: all 0.3s ease;
+        }
+        
+        &:hover {
+          color: var(--green);
+          transform: translateX(5px);
         }
       }
     }
