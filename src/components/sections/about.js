@@ -196,6 +196,8 @@ const About = () => {
 
           <ul className="skills-list">
             {skills && skills.map((skill, i) => <li key={i}>{skill}</li>)}
+            )
+            }
           </ul>
           </StyledText>
         </motion.div>
