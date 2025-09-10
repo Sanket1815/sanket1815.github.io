@@ -1,4 +1,4 @@
-// File: C:\Users\snadk\Documents\GitHub\AI-Competitons\sanket1815.github.io\project\app\page.tsx
+// File: C:\Users\snadk\Documents\GitHub\sanket1815.github.io\project\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

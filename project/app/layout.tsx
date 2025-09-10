@@ -7,6 +7,7 @@ import { Footer } from '../components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://sanket1815.github.io'),
   title: 'Sanket Nadkarni - Software Engineer',
   description: 'Software Engineer and Full Stack Developer with 3+ years of experience building scalable web applications.',
   keywords: ['Software Engineer', 'Full Stack Developer', 'React', 'Node.js', 'TypeScript'],
