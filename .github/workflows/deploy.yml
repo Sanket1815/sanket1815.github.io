@@ -41,10 +41,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
+      - name: Prepare for deployment
+        run: |
+          # Copy files to root directory for GitHub Pages
+          cp -r project/out/* ./
+          # Create .nojekyll file
+          touch .nojekyll
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './project/out'
+          path: '.'
 
   deploy:
     environment:

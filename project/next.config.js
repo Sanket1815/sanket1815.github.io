@@ -9,8 +9,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/sanket1815.github.io' : '',
-  basePath: process.env.NODE_ENV === 'production' ? '/sanket1815.github.io' : '',
 }
 
 module.exports = nextConfig
