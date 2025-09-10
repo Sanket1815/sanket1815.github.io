@@ -87,7 +87,7 @@ export function About() {
             <div className="relative group">
               <div className="relative z-10 rounded bg-green">
                 <Image
-                  src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400"
+                  src="/images/sanket.jpg"
                   alt="Sanket Nadkarni"
                   width={300}
                   height={300}
